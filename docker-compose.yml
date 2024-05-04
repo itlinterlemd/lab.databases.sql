@@ -1,0 +1,38 @@
+services:
+  server-mysql:
+    image: mysql:8.0.28
+    ports:
+      - 3306:3306
+    environment:
+      # MYSQL_ALLOW_EMPTY_PASSWORD=yes
+      - MYSQL_DATABASE=employees
+      # So you don't have to use root, but you can if you like
+      - MYSQL_USER=user_itli
+      # You can use whatever password you like
+      - MYSQL_PASSWORD=12345678
+      # Password for root access
+      - MYSQL_ROOT_PASSWORD=12345678
+    command: mysqld --lower_case_table_names=1 --skip-ssl --character_set_server=utf8mb4 --explicit_defaults_for_timestamp
+    volumes:
+      - dbmysql1:/var/lib/mysql
+      - ./scripts:/var/tmp/scripts
+      - ./scripts/employees.sql:/docker-entrypoint-initdb.d/1.sql
+  
+  server-postgresql:
+    image: postgres:14.2
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_USER=postgres_itli
+      - POSTGRES_PASSWORD=12345678
+      - POSTGRES_HOST_AUTH_METHOD=trust
+    volumes:
+      - dbpostgres:/var/lib/postgresql
+
+
+# Names our volume
+volumes:
+  dbmysql1:
+  dbpostgres:
+      
+ 
